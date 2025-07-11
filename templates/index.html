@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Telco Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/c4a12cbf74.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- 🧭 Fixed Navbar -->
+<nav class="bg-white shadow fixed w-full top-0 z-50 px-4 py-2 flex justify-between items-center">
+  <span class="font-bold text-xl">📍 Telco Hub</span>
+
+  <div class="flex items-center space-x-4">
+    {{ if .IsAdmin }}
+    <a href="/admin/ui" class="text-indigo-500 hover:underline">Dashboard</a>
+    {{ end }}
+
+    <!-- 👤 User Menu -->
+    <div class="relative">
+      <button onclick="toggleUserMenu()" class="text-gray-700 font-medium flex items-center gap-1">
+        {{ .Username }} <i class="fas fa-chevron-down text-xs"></i>
+      </button>
+
+      <div
+        id="userMenu"
+        class="absolute right-0 mt-2 hidden flex-col bg-white border rounded shadow w-40 z-50"
+      >
+      <ol>
+        <li><a href="/profile.html" class="px-4 py-2 text-sm hover:bg-gray-100">👤 Profile</a></li>
+        <li><a href="/logout" class="px-4 py-2 text-sm text-red-500 hover:bg-gray-100">🚪 Logout</a></li>
+      </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- 🗺️ Map Container -->
+  <div id="map" class="h-[60vh] mt-16 mx-4 rounded shadow"></div>
+
+  <!-- 📋 Marker Table -->
+  <div class="mt-6 mx-4 max-w-md">
+    <input
+      type="text"
+      id="markerSearch"
+      placeholder="Search markers by title or description"
+      class="border rounded px-3 py-2 w-full"
+      oninput="filterMarkers()"
+    />
+  </div>
+
+  <div class="mt-4 mx-4 overflow-x-auto">
+    <table class="min-w-full bg-white shadow rounded text-sm text-center">
+      <thead class="bg-gray-200 text-gray-700">
+        <tr>
+          <th class="px-2 py-2">Title</th>
+          <th class="px-2 py-2 hidden md:table-cell">Description</th>
+          <th class="px-2 py-2">Latitude</th>
+          <th class="px-2 py-2">Longitude</th>
+          <th class="px-2 py-2">Owner</th>
+          <th class="px-2 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="marker-table"></tbody>
+    </table>
+  </div>
+
+  <!-- ➕ Modal for Adding Marker -->
+    <div id="markerModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <form id="markerForm" class="bg-white p-6 rounded shadow w-full max-w-md space-y-4">
+        <h3 id="modalTitle" class="text-lg font-semibold">Add Marker</h3>
+        <input name="title" class="border rounded px-3 py-2 w-full" placeholder="Title" required />
+        <textarea name="description" class="border rounded px-3 py-2 w-full" placeholder="Description"></textarea>
+        <input type="hidden" name="latitude" />
+        <input type="hidden" name="longitude" />
+        <input type="hidden" name="marker_id" />
+        <div class="flex justify-end gap-4">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+            <button type="button" onclick="closeModal()" class="text-gray-500">Cancel</button>
+        </div>
+        </form>
+    </div>
+
+  <!-- 🧾 History Modal -->
+  <div id="historyModal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded shadow w-full max-w-lg">
+      <h3 class="text-lg font-bold mb-2">📍 Marker History</h3>
+      <ul class="modal-body text-sm text-gray-700 space-y-2"></ul>
+      <button onclick="closeHistory()" class="mt-4 text-blue-500">Close</button>
+    </div>
+  </div>
+  <script src="/static/js/map.js"></script>
+  <script src="/static/js/ui.js"></script>
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOAkWiVJ_XseIUPwN3Xtn0Nm74oa01SQI&callback=initMap"
+  async defer
+></script>
+</body>
+</html>
