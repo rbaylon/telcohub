@@ -71,3 +71,35 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	db.DB.Delete(&models.User{}, id)
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func CreateCategory(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session-id")
+	//id, _ := session.Values["user_id"].(uint)
+	_, ok := session.Values["role"].(string)
+	_, uok := session.Values["username"].(string)
+
+	if !ok || !uok {
+		http.Redirect(w, r, "/login.html", http.StatusSeeOther)
+		return
+	}
+
+	name := r.FormValue("name")
+	color := r.FormValue("color")
+	db.DB.Create(&models.Category{Name: name, Color: color})
+	http.Redirect(w, r, "/admin/category/create.html", http.StatusSeeOther)
+}
+
+func CreateCategoryUi(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session-id")
+	//id, _ := session.Values["user_id"].(uint)
+	_, ok := session.Values["role"].(string)
+	_, uok := session.Values["username"].(string)
+
+	if !ok || !uok {
+		http.Redirect(w, r, "/login.html", http.StatusSeeOther)
+		return
+	}
+
+	tmpl := template.Must(template.ParseFiles("templates/admin-category.html"))
+	tmpl.Execute(w, nil)
+}

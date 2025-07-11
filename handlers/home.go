@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"net/http"
+	"telcohub/db"
+	"telcohub/models"
 	"text/template"
 
 	"github.com/gorilla/sessions"
@@ -17,11 +19,13 @@ func Home(store *sessions.CookieStore) http.HandlerFunc {
 			http.Redirect(w, r, "/login.html", http.StatusSeeOther)
 			return
 		}
-
+		var categories []models.Category
+		db.DB.Find(&categories)
 		tmpl := template.Must(template.ParseFiles("templates/index.html"))
 		tmpl.Execute(w, map[string]interface{}{
-			"IsAdmin":  role == "admin",
-			"Username": username,
+			"IsAdmin":    role == "admin",
+			"Username":   username,
+			"Categories": categories,
 		})
 	}
 }

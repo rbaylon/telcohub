@@ -41,6 +41,8 @@ func main() {
 	admin := r.PathPrefix("/admin").Subrouter()
 	admin.Use(middleware.RequireRole("admin", store))
 	admin.HandleFunc("/dashboard", handlers.AdminDashboard).Methods("GET")
+	admin.HandleFunc("/category/create", handlers.CreateCategory).Methods("POST")
+	admin.HandleFunc("/category/create.html", handlers.CreateCategoryUi).Methods("GET")
 	admin.HandleFunc("/ui", handlers.AdminDashboardUi(store)).Methods("GET")
 	admin.HandleFunc("/user/{id}/role", handlers.UpdateUserRole).Methods("POST")
 	admin.HandleFunc("/user/{id}/delete", handlers.DeleteUser).Methods("DELETE")

@@ -49,7 +49,7 @@ function fetchMarkers() {
 
         const infoWindow = new google.maps.InfoWindow({
           content: `
-            <div class="text-sm">
+            <div class="text-sm ${m.Category.color}">
               <h3 class="font-semibold text-blue-600">${m.Title}</h3>
               <p class="text-gray-700">${m.Description}</p>
             </div>

@@ -34,6 +34,7 @@ func CreateMarker(w http.ResponseWriter, r *http.Request) {
 
 	lat, _ := strconv.ParseFloat(r.FormValue("latitude"), 64)
 	lng, _ := strconv.ParseFloat(r.FormValue("longitude"), 64)
+	cat_id, _ := strconv.Atoi(r.FormValue("category_id"))
 
 	marker := models.Marker{
 		Title:       r.FormValue("title"),
@@ -41,6 +42,7 @@ func CreateMarker(w http.ResponseWriter, r *http.Request) {
 		Latitude:    lat,
 		Longitude:   lng,
 		UserID:      user.ID,
+		CategoryID:  uint(cat_id),
 	}
 	db.DB.Create(&marker)
 	w.WriteHeader(http.StatusCreated)
@@ -61,9 +63,10 @@ func EditMarker(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
-
+	cat_id, _ := strconv.Atoi(r.FormValue("category_id"))
 	marker.Title = r.FormValue("title")
 	marker.Description = r.FormValue("description")
+	marker.CategoryID = uint(cat_id)
 	db.DB.Save(&marker)
 	w.WriteHeader(http.StatusOK)
 }
@@ -97,9 +100,9 @@ func ListMarkers(w http.ResponseWriter, r *http.Request) {
 
 	var markers []models.Marker
 	if user.Role == "admin" {
-		db.DB.Preload("User").Find(&markers)
+		db.DB.Preload("User").Preload("Category").Find(&markers)
 	} else {
-		db.DB.Preload("User").Where("user_id = ?", user.ID).Find(&markers)
+		db.DB.Preload("User").Preload("Category").Where("user_id = ?", user.ID).Find(&markers)
 	}
 
 	json.NewEncoder(w).Encode(markers)
