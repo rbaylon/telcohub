@@ -10,13 +10,9 @@
 
   <!-- 🧭 Fixed Navbar -->
 <nav class="bg-white shadow fixed w-full top-0 z-50 px-4 py-2 flex justify-between items-center">
-  <span class="font-bold text-xl">📍 Telco Hub</span>
+  <span class="font-bold text-xl"><i class="fa-solid fa-map-location-dot"></i> Telco Hub</span>
 
   <div class="flex items-center space-x-4">
-    {{ if .IsAdmin }}
-    <a href="/admin/ui" class="text-indigo-500 hover:underline">Dashboard</a>
-    {{ end }}
-
     <!-- 👤 User Menu -->
     <div class="relative">
       <button onclick="toggleUserMenu()" class="text-gray-700 font-medium flex items-center gap-1">
@@ -28,8 +24,12 @@
         class="absolute right-0 mt-2 hidden flex-col bg-white border rounded shadow w-40 z-50"
       >
       <ol>
-        <li><a href="/profile.html" class="px-4 py-2 text-sm hover:bg-gray-100">👤 Profile</a></li>
-        <li><a href="/logout" class="px-4 py-2 text-sm text-red-500 hover:bg-gray-100">🚪 Logout</a></li>
+        {{ if .IsAdmin }}
+        <li><a href="/admin/ui" class="px-4 py-2 text-sm hover:bg-gray-100">Users</a></li>
+        <li><a href="/admin/category/create.html" class="px-4 py-2 text-sm hover:bg-gray-100">Categories</a></li>
+        {{ end }}
+        <li><a href="/profile.html" class="px-4 py-2 text-sm hover:bg-gray-100">Profile</a></li>
+        <li><a href="/logout" class="px-4 py-2 text-sm text-red-500 hover:bg-gray-100">Logout</a></li>
       </ol>
       </div>
     </div>

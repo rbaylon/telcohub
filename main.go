@@ -46,6 +46,8 @@ func main() {
 	admin.HandleFunc("/ui", handlers.AdminDashboardUi(store)).Methods("GET")
 	admin.HandleFunc("/user/{id}/role", handlers.UpdateUserRole).Methods("POST")
 	admin.HandleFunc("/user/{id}/delete", handlers.DeleteUser).Methods("DELETE")
+	admin.HandleFunc("/category/list", handlers.ListCategories).Methods("GET")
+	admin.HandleFunc("/category/delete/{id}", handlers.DeleteCategory).Methods("POST")
 
 	// 🌍 Serve static files and templates
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))

@@ -12,6 +12,7 @@ function openModal(lat, lng, marker = null) {
     form.latitude.value = marker.Latitude;
     form.longitude.value = marker.Longitude;
     form.marker_id.value = marker.ID;
+    form.category_id.value = marker.Category.id;
   } else {
     document.getElementById("modalTitle").textContent = "Add Marker";
     form.reset();
