@@ -49,10 +49,16 @@ func main() {
 	admin.HandleFunc("/category/list", handlers.ListCategories).Methods("GET")
 	admin.HandleFunc("/category/delete/{id}", handlers.DeleteCategory).Methods("POST")
 
+	r.HandleFunc("/groups.html", handlers.ShowGroups).Methods("GET")
+	r.HandleFunc("/groups/create", handlers.CreateGroup).Methods("POST")
+	r.HandleFunc("/groups/{id}/add", handlers.AddToGroup).Methods("POST")
+	r.HandleFunc("/groups/user/{id}/toggle", handlers.ToggleAdmin).Methods("POST")
+	r.HandleFunc("/groups/user/{id}/remove", handlers.RemoveMember).Methods("DELETE")
+
 	// 🌍 Serve static files and templates
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 	//r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("templates"))))
-	r.HandleFunc("/", handlers.Home(store)).Methods("GET")
+	r.HandleFunc("/", handlers.Home).Methods("GET")
 	r.HandleFunc("/profile.html", handlers.ShowProfile).Methods("GET")
 	r.HandleFunc("/change-password.html", handlers.ShowChangePassword).Methods("GET")
 	r.HandleFunc("/change-password", handlers.ChangePassword).Methods("POST")

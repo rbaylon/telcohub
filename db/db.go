@@ -23,7 +23,13 @@ func Init() {
 	log.Println("Database connected successfully")
 
 	// Run migrations for all models
-	if err := DB.AutoMigrate(&models.User{}, &models.Marker{}); err != nil {
+	if err := DB.AutoMigrate(
+		&models.User{},
+		&models.Marker{},
+		&models.Category{},
+		&models.Group{},
+		&models.GroupUser{},
+	); err != nil {
 		log.Fatalf("Migration failed: %v", err)
 	}
 

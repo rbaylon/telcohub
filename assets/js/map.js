@@ -68,4 +68,3 @@ function fetchMarkers() {
     .catch(err => console.error("Failed to load markers:", err));
 }
 
-

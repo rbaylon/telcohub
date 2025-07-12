@@ -12,5 +12,7 @@ type Marker struct {
 	User        User     `gorm:"foreignKey:UserID"`
 	CategoryID  uint     `json:"category_id"`
 	Category    Category `gorm:"foreignKey:CategoryID"`
+	GroupID     uint     `json:"group_id"`
+	Group       Group    `gorm:"foreignKey:GroupID"`
 	CreatedAt   time.Time
 }

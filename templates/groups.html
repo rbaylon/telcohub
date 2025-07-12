@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Groups</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- 🧭 Navbar -->
+  <nav class="bg-white shadow fixed w-full top-0 z-50 px-4 py-2 flex justify-between items-center">
+    <h1 class="text-xl font-bold">👥 Group Manager</h1>
+    <a href="/" class="text-blue-500 hover:underline">← Back</a>
+  </nav>
+
+  <div class="mt-16 px-4 space-y-6">
+    {{ if .CreateGroup }}
+    <!-- 🛠 Create Group -->
+    <form method="POST" action="/groups/create" class="bg-white p-4 rounded shadow space-y-4 max-w-sm">
+      <h2 class="text-lg font-semibold">Create New Group</h2>
+      <input name="name" required placeholder="Group name" class="border px-3 py-2 w-full rounded" />
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
+    </form>
+    {{ end }}
+
+    <!-- 📋 Existing Groups -->
+    {{ range .Groups }}
+    <div class="bg-white p-4 rounded shadow space-y-2 max-w-sm">
+      <h3 class="text-lg font-bold text-indigo-600">{{ .Name }}</h3>
+      <p class="text-sm text-gray-500">Owner: {{ .OwnerName }}</p>
+
+      <!-- 🧑 Members -->
+      <div class="mt-2">
+        <h4 class="font-semibold mb-1">Members:</h4>
+        <ul class="text-sm space-y-1">
+          {{$gowner := .IsGroupOwner}}
+          {{$owner := .OwnerName}}
+          {{ range .Members }}
+          <li>
+            {{ .Username }}
+            {{ if .IsAdmin }}<span class="text-green-500 font-medium">(admin)</span>{{ end }}
+            {{ if $gowner }}
+              {{ if ne $owner .Username }}
+              <button onclick="toggleAdmin('{{ .ID }}')" class="text-xs text-blue-500 ml-2">Toggle Admin</button>
+              <button onclick="removeMember('{{ .ID }}')" class="text-xs text-red-500 ml-2">Remove</button>
+              {{ end }}
+            {{ end }}
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+
+      <!-- ➕ Add Member -->
+      {{ if .IsGroupOwner }}
+      <form method="POST" action="/groups/{{ .ID }}/add" class="mt-2 flex gap-2">
+        <input name="username" placeholder="Username to add" required class="border px-3 py-1 rounded w-full" />
+        <button type="submit" class="bg-indigo-500 text-white px-3 rounded">Add</button>
+      </form>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+
+  <script src="/static/js/groups.js"></script>
+</body>
+</html>
