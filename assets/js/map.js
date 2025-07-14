@@ -17,15 +17,14 @@ function initMap() {
 
 
 function placeMarker(latLng) {
-  new google.maps.Marker({
+  new google.maps.marker.AdvancedMarkerElement({
+    map,
     position: latLng,
-    map: map,
   });
 }
 
 let markerObjects = [];
 let filteredmarkersObjects = [];
-//let infoWindows = [];
 
 function fetchMarkers() {
   fetch("/marker/list")
@@ -33,20 +32,7 @@ function fetchMarkers() {
     .then(data => {
       markerObjects.forEach(m => m.marker.setMap(null)); // Clear old markers
       markerObjects = [];
-      //markers.forEach(m => m.setMap(null)); // Clear old markers
-      //infoWindows.forEach(i => i.close()); // Clear old infowindows
-      //infoWindows = [];
-      //markers = [];
       data.forEach(m => {
-        /*const marker = new google.maps.Marker({
-          position: { lat: m.Latitude, lng: m.Longitude },
-          map: map,
-          title: m.Title,
-        });*/
-        // Change the background color.
-        //const pinBackground = new google.maps.marker.PinElement({
-        //  background: `${m.Category.color}`,
-        //});
         const pinBackground = document.createElement('div');
         pinBackground.className = "marker-class";
         pinBackground.textContent = `${m.Title} ${m.Description}`;
@@ -57,8 +43,6 @@ function fetchMarkers() {
           content: pinBackground,
         });
 
-        //marker.setAnimation(google.maps.Animation.BOUNCE);
-        //setTimeout(() => marker.setAnimation(null), 700);
         marker.content.classList.add("drop");
         if (m.Category.color){
           marker.content.classList.add(`${m.Category.color}`);
@@ -76,8 +60,6 @@ function fetchMarkers() {
             </div>
           `,
         });
-        // 👇 Show the window immediately
-        //infoWindow.open(map, marker);
         marker.addListener("click", () => {
           infoWindow.open(map, marker);
         });
@@ -87,8 +69,6 @@ function fetchMarkers() {
           "infowindow": infoWindow,
         }; 
         markerObjects.push(markerdata);
-        //markers.push(marker);
-        //infoWindows.push(infoWindow);
       });
       console.log(markerObjects);
       populateTable(markerObjects);
@@ -101,9 +81,6 @@ function focusMarker(index) {
   const marker = filteredmarkersObjects[index];
   const infoWindow = marker.infowindow;
   window.scrollTo(0, 0);
-  //marker.content.classList.add("drop")
-  //marker.marker.setAnimation(google.maps.Animation.BOUNCE);
-  //setTimeout(() => marker.marker.setAnimation(null), 800);
   map.panTo(marker.marker.position);
   map.setZoom(17); // or adjust as needed
 

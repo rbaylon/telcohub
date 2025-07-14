@@ -24,7 +24,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	var categories []models.Category
 	db.DB.Find(&categories)
 	var groups []models.Group
-	db.DB.Where("owner_id = ?", id).Find(&groups)
+	var gus []models.GroupUser
+	db.DB.Preload("Group").Where("user_id = ? AND is_admin = ?", id, true).Find(&gus)
+	for _, gu := range gus {
+		groups = append(groups, gu.Group)
+	}
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))
 	tmpl.Execute(w, map[string]interface{}{
 		"IsAdmin":    role == "admin",

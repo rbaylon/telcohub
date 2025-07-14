@@ -80,7 +80,7 @@ func AddToGroup(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: false,
 	})
 
-	http.Redirect(w, r, "/groups.html", http.StatusSeeOther)
+	http.Redirect(w, r, "/groups/list", http.StatusSeeOther)
 }
 
 func ToggleAdmin(w http.ResponseWriter, r *http.Request) {

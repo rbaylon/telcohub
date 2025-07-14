@@ -59,10 +59,6 @@ func EditMarker(w http.ResponseWriter, r *http.Request) {
 	var marker models.Marker
 	db.DB.First(&marker, id)
 
-	if marker.UserID != user.ID && user.Role != "admin" {
-		http.Error(w, "Forbidden", http.StatusForbidden)
-		return
-	}
 	cat_id, _ := strconv.Atoi(r.FormValue("category_id"))
 	group_id, _ := strconv.Atoi(r.FormValue("group_id"))
 	marker.Title = r.FormValue("title")
@@ -73,7 +69,6 @@ func EditMarker(w http.ResponseWriter, r *http.Request) {
 	// Check if user is group admin
 	var gu models.GroupUser
 	db.DB.Where("user_id = ? AND group_id = ?", user.ID, marker.GroupID).First(&gu)
-
 	if !gu.IsAdmin {
 		if user.Role != "admin" {
 			http.Error(w, "Unauthorized", http.StatusForbidden)
