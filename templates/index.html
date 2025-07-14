@@ -4,38 +4,41 @@
   <meta charset="UTF-8" />
   <title>Telco Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/map.css" />
   <script src="https://kit.fontawesome.com/c4a12cbf74.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-100 font-sans">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-600 text-white p-4 fixed z-50 w-full top-0">
+      <div class="container mx-auto flex justify-between">
+        <h1 class="text-lg font-bold">
+          <span class="font-bold text-xl"><i class="fa-solid fa-map-location-dot"></i> Telco Hub
+          </span></h1>
+        <ul class="flex space-x-4">
+          <li><a href="/" class="hover:underline">Home</a></li>
+          <li><a href="/groups/list" class="hover:underline">Groups</a></li>
+          <li>
+            <button onclick="toggleUserMenu()" class="flex items-center gap-1">
+              {{ .Username }} <i class="fas fa-user text-xs"></i>
+            </button>
 
-  <!-- 🧭 Fixed Navbar -->
-<nav class="bg-white shadow fixed w-full top-0 z-50 px-4 py-2 flex justify-between items-center">
-  <span class="font-bold text-xl"><i class="fa-solid fa-map-location-dot"></i> Telco Hub</span>
-
-  <div class="flex items-center space-x-4">
-    <!-- 👤 User Menu -->
-    <div class="relative">
-      <button onclick="toggleUserMenu()" class="text-gray-700 font-medium flex items-center gap-1">
-        {{ .Username }} <i class="fas fa-chevron-down text-xs"></i>
-      </button>
-
-      <div
-        id="userMenu"
-        class="absolute right-0 mt-2 hidden flex-col bg-white border rounded shadow w-40 z-50"
-      >
-      <ol>
-        {{ if .IsAdmin }}
-        <li><a href="/admin/ui" class="px-4 py-2 text-sm hover:bg-gray-100">Users</a></li>
-        <li><a href="/admin/category/create.html" class="px-4 py-2 text-sm hover:bg-gray-100">Categories</a></li>
-        {{ end }}
-        <li><a href="/profile.html" class="px-4 py-2 text-sm hover:bg-gray-100">Profile</a></li>
-        <li><a href="/logout" class="px-4 py-2 text-sm text-red-500 hover:bg-gray-100">Logout</a></li>
-      </ol>
+            <div
+              id="userMenu"
+              class="absolute mt-2 hidden flex-col bg-white border rounded shadow w-40 z-50"
+            >
+            <ol>
+              {{ if .IsAdmin }}
+              <li class="hover:bg-blue-300"><a href="/admin/ui" class="text-gray-800">Users</a></li>
+              <li class="hover:bg-blue-300"><a href="/admin/category/create.html" class="text-gray-800">Categories</a></li>
+              {{ end }}
+              <li class="hover:bg-blue-300"><a href="/profile.html" class="text-gray-800">Profile</a></li>
+              <li class="hover:bg-blue-300"><a href="/logout" class="text-gray-800">Logout</a></li>
+            </ol>
+            </div>
+          </li>
+        </ul>
       </div>
-    </div>
-  </div>
-</nav>
-
+    </nav>
 
   <!-- 🗺️ Map Container -->
   <div id="map" class="h-[60vh] mt-16 mx-4 rounded shadow"></div>
@@ -104,7 +107,7 @@
   <script src="/static/js/map.js"></script>
   <script src="/static/js/ui.js"></script>
   <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOAkWiVJ_XseIUPwN3Xtn0Nm74oa01SQI&callback=initMap"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOAkWiVJ_XseIUPwN3Xtn0Nm74oa01SQI&callback=initMap&libraries=marker"
   async defer
 ></script>
 </body>

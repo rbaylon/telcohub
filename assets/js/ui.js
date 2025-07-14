@@ -53,18 +53,19 @@ document.getElementById("markerForm")?.addEventListener("submit", function (e) {
 // Fill table with markers
 function populateTable(markers) {
   const table = document.getElementById("marker-table");
-  table.innerHTML = markers.map(m =>
-    `<tr>
-      <td class="px-4 py-2">${m.Title}</td>
-      <td class="px-4 py-2 hidden md:table-cell">${m.Description}</td>
-      <td class="px-4 py-2">${m.Latitude}</td>
-      <td class="px-4 py-2">${m.Longitude}</td>
-      <td class="px-4 py-2">${m.User.Username}</td>
+  table.innerHTML = markers.map((m, i) =>
+    `<tr class="hover:bg-gray-100 cursor-pointer"
+        onclick="focusMarker(${i})">
+      <td class="px-4 py-2">${m.data.Title}</td>
+      <td class="px-4 py-2 hidden md:table-cell">${m.data.Description}</td>
+      <td class="px-4 py-2">${m.data.Latitude}</td>
+      <td class="px-4 py-2">${m.data.Longitude}</td>
+      <td class="px-4 py-2">${m.data.User.Username}</td>
       <td class="px-4 py-2 space-x-2">
-        <button onclick="editMarker(${m.ID})" title="Edit">
+        <button onclick="editMarker(${m.data.ID})" title="Edit">
           <i class="fas fa-edit text-blue-500"></i>
         </button>
-        <button onclick="deleteMarker(${m.ID})" title="Delete">
+        <button onclick="deleteMarker(${m.data.ID})" title="Delete">
           <i class="fas fa-trash text-red-500"></i>
         </button>
       </td>
