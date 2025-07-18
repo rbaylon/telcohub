@@ -6,6 +6,8 @@ import (
 	"telcohub/models"
 
 	"github.com/gorilla/sessions"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/google"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -34,4 +36,10 @@ func GetUserFromSession(r *http.Request, store *sessions.CookieStore) (models.Us
 	var user models.User
 	db.DB.First(&user, id)
 	return user, nil
+}
+
+func OAuthInit(google_client_id string, google_client_secret string, callback_url string) {
+	goth.UseProviders(
+		google.New(google_client_id, google_client_secret, callback_url, "email", "profile"),
+	)
 }
