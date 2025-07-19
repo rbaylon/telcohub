@@ -2,7 +2,10 @@ package db
 
 import (
 	"log"
+	"os"
+	"strings"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
@@ -34,4 +37,26 @@ func Init() {
 	}
 
 	log.Println("Database migrated")
+}
+
+func GetEnvVariable(key string) string {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
+	return os.Getenv(key)
+}
+
+func GetEnvCors(key string) []string {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
+	var cors []string
+	if key == "CORS_ALLOWED" {
+		cors_allowed := os.Getenv(key)
+		// Parse the string into a slice
+		cors = strings.Split(cors_allowed, ",")
+	}
+	return cors
 }
