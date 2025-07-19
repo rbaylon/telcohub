@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 
 	"telcohub/db"
@@ -14,25 +12,17 @@ import (
 
 func main() {
 	// 📦 Initialize DB
+	var admin_user = strings.TrimSpace(db.GetEnvVariable("APP_ADMIN"))
+	var admin_pw = strings.TrimSpace(db.GetEnvVariable("APP_ADMIN_PW"))
 	db.Init()
 
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Print("Enter admin username: ")
-	username, _ := reader.ReadString('\n')
-	username = strings.TrimSpace(username)
-
-	fmt.Print("Enter admin password: ")
-	password, _ := reader.ReadString('\n')
-	password = strings.TrimSpace(password)
-
-	hash, err := utils.HashPassword(password)
+	hash, err := utils.HashPassword(admin_pw)
 	if err != nil {
 		log.Fatalf("Password hash error: %v", err)
 	}
 
 	admin := models.User{
-		Username: username,
+		Username: admin_user,
 		Password: hash,
 		Role:     "admin",
 	}
@@ -41,5 +31,5 @@ func main() {
 		log.Fatalf("Failed to create admin: %v", err)
 	}
 
-	fmt.Println("✅ Admin user created successfully!")
+	fmt.Println("Admin user created successfully!")
 }
