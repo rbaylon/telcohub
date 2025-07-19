@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -8,28 +9,41 @@ import (
 	"telcohub/handlers"
 	"telcohub/middleware"
 
+	ghandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 )
 
 func main() {
-	// 🗃️ Initialize DB
+	var (
+		app_ip       = db.GetEnvVariable("APP_IP")
+		app_port     = db.GetEnvVariable("APP_PORT")
+		cors_allowed = db.GetEnvCors("CORS_ALLOWED")
+		secret       = db.GetEnvVariable("APP_SECRET")
+	)
+
+	credentials := ghandlers.AllowCredentials()
+	methods := ghandlers.AllowedMethods([]string{"POST"})
+	//ttl := ghandlers.MaxAge(3600)
+	origins := ghandlers.AllowedOrigins(cors_allowed)
+
+	// Initialize DB
 	db.Init()
 
 	// session
-	store := sessions.NewCookieStore([]byte("super-secret-key"))
+	store := sessions.NewCookieStore([]byte(secret))
 
-	// 📦 Create router
+	// Create router
 	r := mux.NewRouter()
 
-	// 🔐 Auth routes
+	// Auth routes
 	r.HandleFunc("/register", handlers.Register).Methods("POST")
 	r.HandleFunc("/register.html", handlers.RegisterUi).Methods("GET")
 	r.HandleFunc("/login", handlers.Login).Methods("POST")
 	r.HandleFunc("/login.html", handlers.LoginUi).Methods("GET")
 	r.HandleFunc("/logout", handlers.Logout).Methods("GET")
 
-	// 🗺️ Marker routes (protected)
+	// Marker routes (protected)
 	marker := r.PathPrefix("/marker").Subrouter()
 	marker.Use(middleware.AuthMiddleware(store))
 	marker.HandleFunc("/create", handlers.CreateMarker).Methods("POST")
@@ -37,7 +51,7 @@ func main() {
 	marker.HandleFunc("/delete/{id}", handlers.DeleteMarker).Methods("POST")
 	marker.HandleFunc("/list", handlers.ListMarkers).Methods("GET")
 
-	// 🧑‍💼 Admin routes (admin-only middleware)
+	// Admin routes (admin-only middleware)
 	admin := r.PathPrefix("/admin").Subrouter()
 	admin.Use(middleware.RequireRole("admin", store))
 	admin.HandleFunc("/dashboard", handlers.AdminDashboard).Methods("GET")
@@ -57,7 +71,7 @@ func main() {
 	group.HandleFunc("/user/{id}/toggle", handlers.ToggleAdmin).Methods("POST")
 	group.HandleFunc("/user/{id}/remove", handlers.RemoveMember).Methods("DELETE")
 
-	// 🌍 Serve static files and templates
+	// Serve static files and templates
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 
 	r.HandleFunc("/", handlers.Home).Methods("GET")
@@ -65,7 +79,7 @@ func main() {
 	r.HandleFunc("/change-password.html", handlers.ShowChangePassword).Methods("GET")
 	r.HandleFunc("/change-password", handlers.ChangePassword).Methods("POST")
 
-	// 🌐 Start server
+	// Start server
 	log.Println("Server running at http://localhost:8080")
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(fmt.Sprintf("%s:%s", app_ip, app_port), ghandlers.CORS(credentials, methods, origins)(r))
 }

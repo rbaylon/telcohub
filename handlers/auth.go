@@ -10,7 +10,8 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-var store = sessions.NewCookieStore([]byte("super-secret-key"))
+var secret = db.GetEnvVariable("APP_SECRET")
+var store = sessions.NewCookieStore([]byte(secret))
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")

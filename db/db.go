@@ -1,12 +1,13 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/joho/godotenv"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	"telcohub/models" // Replace with actual module name
@@ -17,8 +18,16 @@ var DB *gorm.DB
 
 // Init initializes the database and runs migrations
 func Init() {
-	var err error
-	DB, err = gorm.Open(sqlite.Open("markers.db"), &gorm.Config{})
+	var (
+		dbname = GetEnvVariable("DB_NAME")
+		dbhost = GetEnvVariable("DB_HOST")
+		dbuser = GetEnvVariable("DB_USER")
+		dbpass = GetEnvVariable("DB_PASS")
+		err    error
+	)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=5432 TimeZone=Asia/Singapore", dbhost, dbuser, dbpass, dbname)
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	//DB, err = gorm.Open(sqlite.Open("markers.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
