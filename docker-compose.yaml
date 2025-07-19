@@ -10,7 +10,7 @@ services:
       - ./.env:/build/.env:ro # Mount your static HTML directory
     environment:
       - VIRTUAL_HOST=gis.arkgate.net
-      - VIRTUAL_PORT=8960
+      - VIRTUAL_PORT=8690
       - LETSENCRYPT_HOST=gis.arkgate.net
       - WEB_FQDN=gis.arkgate.net
     networks:
