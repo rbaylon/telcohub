@@ -80,6 +80,6 @@ func main() {
 	r.HandleFunc("/change-password", handlers.ChangePassword).Methods("POST")
 
 	// Start server
-	log.Printf("Server running at http://%st:%s\n", app_ip, app_port)
+	log.Printf("Server running at http://%s:%s\n", app_ip, app_port)
 	http.ListenAndServe(fmt.Sprintf("%s:%s", app_ip, app_port), ghandlers.CORS(credentials, methods, origins)(r))
 }
