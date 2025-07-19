@@ -7,10 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
-  <!-- 🧭 Navbar -->
+  <!-- Navbar -->
   <nav class="bg-white shadow fixed w-full top-0 z-50 px-4 py-2 flex justify-between items-center">
     <h1 class="text-xl font-bold">👥 Group Manager</h1>
-    <a href="/" class="text-blue-500 hover:underline">← Back</a>
+    <a href="/gis" class="text-blue-500 hover:underline">← Back</a>
   </nav>
 
   <div class="mt-16 px-4 space-y-6">
@@ -23,13 +23,13 @@
     </form>
     {{ end }}
 
-    <!-- 📋 Existing Groups -->
+    <!-- Existing Groups -->
     {{ range .Groups }}
     <div class="bg-white p-4 rounded shadow space-y-2 max-w-sm">
       <h3 class="text-lg font-bold text-indigo-600">{{ .Name }}</h3>
       <p class="text-sm text-gray-500">Owner: {{ .OwnerName }}</p>
 
-      <!-- 🧑 Members -->
+      <!-- Members -->
       <div class="mt-2">
         <h4 class="font-semibold mb-1">Members:</h4>
         <ul class="text-sm space-y-1">

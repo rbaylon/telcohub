@@ -58,7 +58,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	session.Values["username"] = user.Username
 	session.Save(r, w)
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/gis", http.StatusSeeOther)
 }
 
 func LoginUi(w http.ResponseWriter, r *http.Request) {
@@ -70,5 +70,5 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "session-id")
 	session.Options.MaxAge = -1
 	session.Save(r, w)
-	http.Redirect(w, r, "/login.html", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

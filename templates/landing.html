@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 font-sans flex items-center justify-center min-h-screen">
+
+  <div class="flex flex-col md:flex-row md:space-x-12 items-center max-w-4xl bg-white p-8 rounded shadow-lg">
+
+    <!-- Logo & Intro -->
+    <div class="flex-1 text-center md:text-left mb-6 md:mb-0">
+      <h1 class="text-4xl font-bold text-blue-700">Telco GIS</h1>
+      <p class="mt-4 text-gray-700 text-lg">
+        Connect, share, and explore your network together.
+      </p>
+    </div>
+
+    <!-- Login / Register Panel -->
+    <div class="flex-1 space-y-6 w-full max-w-md">
+
+      <!-- Login Form -->
+      <form method="POST" action="/login" class="space-y-4">
+        <h2 class="text-xl font-semibold text-gray-800">Login</h2>
+        <input name="username" required class="w-full border px-4 py-2 rounded" placeholder="Username" />
+        <input name="password" type="password" required class="w-full border px-4 py-2 rounded" placeholder="Password" />
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 w-full rounded hover:bg-blue-700">Log In</button>
+      </form>
+
+      <hr class="border-gray-300" />
+
+      <!-- Social Login -->
+      <div class="space-y-3">
+        <a href="/auth/google" class="w-full bg-red-500 text-white px-4 py-2 rounded flex items-center justify-center gap-2">
+          <i class="fab fa-google"></i> Login with Google
+        </a>
+        <a href="/auth/facebook" class="w-full bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center gap-2">
+          <i class="fab fa-facebook-f"></i> Login with Facebook
+        </a>
+      </div>
+
+      <hr class="border-gray-300" />
+
+      <!-- Registration Link -->
+      <p class="text-sm text-gray-600 text-center">
+        Don’t have an account?
+        <a href="/register.html" class="text-blue-600 hover:underline">Create one</a>
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

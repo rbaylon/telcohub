@@ -73,8 +73,9 @@ func main() {
 
 	// Serve static files and templates
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
+	r.HandleFunc("/", handlers.ShowLandingPage).Methods("GET")
 
-	r.HandleFunc("/", handlers.Home).Methods("GET")
+	r.HandleFunc("/gis", handlers.Home).Methods("GET")
 	r.HandleFunc("/profile.html", handlers.ShowProfile).Methods("GET")
 	r.HandleFunc("/change-password.html", handlers.ShowChangePassword).Methods("GET")
 	r.HandleFunc("/change-password", handlers.ChangePassword).Methods("POST")

@@ -61,7 +61,7 @@ func CreateGroup(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: true,
 	})
 
-	http.Redirect(w, r, "/groups.html", http.StatusSeeOther)
+	http.Redirect(w, r, "/groups/list", http.StatusSeeOther)
 }
 
 func AddToGroup(w http.ResponseWriter, r *http.Request) {
