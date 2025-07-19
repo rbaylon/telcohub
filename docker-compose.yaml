@@ -1,0 +1,21 @@
+services:
+  srvcman:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telcogis
+    ports:
+      - "8690:8690" # Maps port 8080 on your host to port 80 on the container
+    volumes:
+      - ./.env:/build/.env:ro # Mount your static HTML directory
+    environment:
+      - VIRTUAL_HOST=gis.arkgate.net
+      - VIRTUAL_PORT=8960
+      - LETSENCRYPT_HOST=gis.arkgate.net
+      - WEB_FQDN=gis.arkgate.net
+    networks:
+      - nginx-reverse-proxy
+
+networks:
+  nginx-reverse-proxy:
+    external: true
