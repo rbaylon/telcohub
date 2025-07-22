@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"net/http"
 	"telcohub/db"
 	"telcohub/models"
@@ -39,6 +40,7 @@ func GetUserFromSession(r *http.Request, store *sessions.CookieStore) (models.Us
 }
 
 func OGoogleAuthInit(google_client_id string, google_client_secret string, callback_url string) {
+	log.Println(google_client_id, google_client_secret, callback_url)
 	goth.UseProviders(
 		google.New(google_client_id, google_client_secret, callback_url, "email", "profile"),
 	)

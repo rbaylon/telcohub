@@ -82,36 +82,53 @@ func BeginAuth(w http.ResponseWriter, r *http.Request) {
 	providerName := mux.Vars(r)["provider"]
 	provider, err := goth.GetProvider(providerName)
 	if err != nil {
-		http.Error(w, "Provider not found", http.StatusBadRequest)
+		http.Error(w, "Invalid provider", http.StatusBadRequest)
 		return
 	}
 
-	sess, err := provider.BeginAuth("state-token")
+	authSession, err := provider.BeginAuth("state-token")
 	if err != nil {
-		http.Error(w, "Error starting auth", http.StatusInternalServerError)
+		http.Error(w, "Auth failed", http.StatusInternalServerError)
 		return
 	}
 
-	url, _ := sess.GetAuthURL()
+	// 🧠 Save session for callback
+	session, _ := store.Get(r, "session-id")
+	session.Values["provider"] = providerName
+	session.Values["auth"] = authSession.Marshal()
+	session.Save(r, w)
+
+	// Redirect to provider's login URL
+	url, _ := authSession.GetAuthURL()
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 func CompleteAuth(w http.ResponseWriter, r *http.Request) {
-	providerName := mux.Vars(r)["provider"]
-	provider, _ := goth.GetProvider(providerName)
+	// Restore saved session
+	session, _ := store.Get(r, "session-id")
+	providerName := session.Values["provider"].(string)
+	authSessionStr := session.Values["auth"].(string)
 
-	value, _ := provider.UnmarshalSession(r.URL.Query().Encode())
-	userData, err := provider.FetchUser(value)
+	provider, _ := goth.GetProvider(providerName)
+	authSession, _ := provider.UnmarshalSession(authSessionStr)
+
+	// 💡 Exchange code for token
+	_, err := authSession.Authorize(provider, r.URL.Query())
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Auth failed: %s", err), http.StatusUnauthorized)
+		http.Error(w, fmt.Sprintf("Token exchange failed: %s", err), http.StatusUnauthorized)
 		return
 	}
 
-	// 🔐 Auto-register user or find existing one
-	user := controllers.FindOrCreateUserByEmail(userData.Email, providerName)
+	user, err := provider.FetchUser(authSession)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("User info fetch failed: %s", err), http.StatusInternalServerError)
+		return
+	}
 
-	// Start session
-	utils.StartUserSession(w, r, user, store)
+	// 🔐 Find or create account
+	account := controllers.FindOrCreateUserByEmail(user.Email, providerName)
+	utils.StartUserSession(w, r, account, store)
 
-	http.Redirect(w, r, "/gis", http.StatusSeeOther)
+	// ✅ Redirect after login
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
