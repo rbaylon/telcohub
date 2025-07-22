@@ -8,6 +8,7 @@ import (
 	"telcohub/db"
 	"telcohub/handlers"
 	"telcohub/middleware"
+	"telcohub/utils"
 
 	ghandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -20,7 +21,12 @@ func main() {
 		app_port     = db.GetEnvVariable("APP_PORT")
 		cors_allowed = db.GetEnvCors("CORS_ALLOWED")
 		secret       = db.GetEnvVariable("APP_SECRET")
+		gcid         = db.GetEnvVariable("GOOGLE_AUTH_CID")
+		gsecret      = db.GetEnvVariable("GOOGLE_AUTH_SECRET")
+		gcburl       = db.GetEnvVariable("GOOGLE_AUTH_CBURL")
 	)
+
+	utils.OGoogleAuthInit(gcid, gsecret, gcburl)
 
 	credentials := ghandlers.AllowCredentials()
 	methods := ghandlers.AllowedMethods([]string{"POST"})
@@ -31,7 +37,13 @@ func main() {
 	db.Init()
 
 	// session
-	store := sessions.NewCookieStore([]byte(secret))
+	var store = sessions.NewCookieStore([]byte(secret))
+	store.Options = &sessions.Options{
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,      // set false during local dev if needed
+		MaxAge:   86400 * 1, // 1 day
+	}
 
 	// Create router
 	r := mux.NewRouter()
@@ -74,6 +86,8 @@ func main() {
 	// Serve static files and templates
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 	r.HandleFunc("/", handlers.ShowLandingPage).Methods("GET")
+	r.HandleFunc("/auth/{provider}", handlers.BeginAuth).Methods("GET")
+	r.HandleFunc("/auth/{provider}/callback", handlers.CompleteAuth).Methods("GET")
 
 	r.HandleFunc("/gis", handlers.Home).Methods("GET")
 	r.HandleFunc("/profile.html", handlers.ShowProfile).Methods("GET")

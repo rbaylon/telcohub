@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID        uint     `gorm:"primaryKey"`
@@ -8,5 +10,7 @@ type User struct {
 	Password  string   `gorm:"not null"`     // bcrypt-hashed
 	Role      string   `gorm:"default:user"` // "user" or "admin"
 	Markers   []Marker `gorm:"foreignKey:UserID"`
+	Provider  string
+	Email     string `gorm:"unique"`
 	CreatedAt time.Time
 }

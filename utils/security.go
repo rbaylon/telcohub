@@ -38,8 +38,16 @@ func GetUserFromSession(r *http.Request, store *sessions.CookieStore) (models.Us
 	return user, nil
 }
 
-func OAuthInit(google_client_id string, google_client_secret string, callback_url string) {
+func OGoogleAuthInit(google_client_id string, google_client_secret string, callback_url string) {
 	goth.UseProviders(
 		google.New(google_client_id, google_client_secret, callback_url, "email", "profile"),
 	)
+}
+
+func StartUserSession(w http.ResponseWriter, r *http.Request, user models.User, store *sessions.CookieStore) {
+	session, _ := store.Get(r, "session-id")
+	session.Values["user_id"] = user.ID
+	session.Values["role"] = user.Role
+	session.Values["username"] = user.Username
+	session.Save(r, w)
 }
