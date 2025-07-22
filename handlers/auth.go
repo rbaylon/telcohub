@@ -130,5 +130,5 @@ func CompleteAuth(w http.ResponseWriter, r *http.Request) {
 	utils.StartUserSession(w, r, account, store)
 
 	// ✅ Redirect after login
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/gis", http.StatusSeeOther)
 }
