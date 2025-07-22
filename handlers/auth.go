@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"telcohub/controllers"
 	"telcohub/db"
@@ -102,7 +103,7 @@ func CompleteAuth(w http.ResponseWriter, r *http.Request) {
 	value, _ := provider.UnmarshalSession(r.URL.Query().Encode())
 	userData, err := provider.FetchUser(value)
 	if err != nil {
-		http.Error(w, "Auth failed", http.StatusUnauthorized)
+		http.Error(w, fmt.Sprintf("Auth failed: %s", err), http.StatusUnauthorized)
 		return
 	}
 
