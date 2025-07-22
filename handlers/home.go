@@ -39,6 +39,14 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShowLandingPage(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session-id")
+	_, ok := session.Values["role"].(string)
+	_, uok := session.Values["username"].(string)
+
+	if ok && uok {
+		http.Redirect(w, r, "/gis", http.StatusSeeOther)
+		return
+	}
 	tmpl := template.Must(template.ParseFiles("templates/landing.html"))
 	tmpl.Execute(w, nil)
 }
