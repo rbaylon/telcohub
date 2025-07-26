@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"telcohub/controllers"
 	"telcohub/db"
@@ -20,6 +21,12 @@ var store = sessions.NewCookieStore([]byte(secret))
 func Register(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
+
+	err := utils.ValidateCredsInput(username, password, w)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	hash, err := utils.HashPassword(password)
 	if err != nil {
@@ -44,6 +51,12 @@ func RegisterUi(w http.ResponseWriter, r *http.Request) {
 func Login(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
+
+	err := utils.ValidateCredsInput(username, password, w)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	var user models.User
 	if err := db.DB.Where("username = ?", username).First(&user).Error; err != nil {

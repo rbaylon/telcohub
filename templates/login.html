@@ -7,13 +7,16 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
-  <form action="/login" method="POST" class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4">
+  <form action="/login" method="POST" class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4" onsubmit="return validateLogin()">
     <h2 class="text-xl font-semibold text-center">Login</h2>
-    <input name="username" placeholder="Username" required class="border rounded px-3 py-2 w-full" />
-    <input name="password" type="password" placeholder="Password" required class="border rounded px-3 py-2 w-full" />
+    <input name="username" placeholder="Username" required class="border rounded px-3 py-2 w-full" 
+      pattern="^[a-zA-Z0-9_.-]{3,}$" id="username" />
+    <input name="password" type="password" placeholder="Password" required class="border rounded px-3 py-2 w-full" 
+      id="password" minlength="6" />
     <button type="submit" class="bg-blue-500 text-white w-full py-2 rounded">Login</button>
     <p class="text-sm text-center text-gray-500">Don't have an account? <a href="/register.html" class="text-blue-500 underline">Register</a></p>
+    <div id="errorMessage" class="text-sm text-red-500 hidden"></div>
   </form>
-
+  <script src="/static/js/ui.js"></script>
 </body>
 </html>

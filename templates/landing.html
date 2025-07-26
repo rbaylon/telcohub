@@ -23,10 +23,13 @@
     <div class="flex-1 space-y-6 w-full max-w-md">
 
       <!-- Login Form -->
-      <form method="POST" action="/login" class="space-y-4">
+      <form method="POST" action="/login" class="space-y-4" onsubmit="return validateLogin()">
         <h2 class="text-xl font-semibold text-gray-800">Login</h2>
-        <input name="username" required class="w-full border px-4 py-2 rounded" placeholder="Username" />
-        <input name="password" type="password" required class="w-full border px-4 py-2 rounded" placeholder="Password" />
+        <input name="username" required class="w-full border px-4 py-2 rounded" placeholder="Username" 
+          pattern="^[a-zA-Z0-9_.-]{3,}$" id="username" />
+        <input name="password" type="password" required class="w-full border px-4 py-2 rounded" placeholder="Password" 
+          minlength="6" id="password" />
+        <div id="errorMessage" class="text-sm text-red-500 hidden"></div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 w-full rounded hover:bg-blue-700">Log In</button>
       </form>
 
@@ -51,6 +54,6 @@
       </p>
     </div>
   </div>
-
+  <script src="/static/js/ui.js"></script>
 </body>
 </html>

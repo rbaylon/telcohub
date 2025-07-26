@@ -103,3 +103,25 @@ document.addEventListener("click", function (e) {
   }
 });
 
+
+function validateLogin() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
+
+  const error = document.getElementById("errorMessage");
+  error.classList.add("hidden");
+
+  if (!/^[a-zA-Z0-9_.-]{3,}$/.test(username)) {
+    error.textContent = "Invalid username format.";
+    error.classList.remove("hidden");
+    return false;
+  }
+
+  if (password.length < 6) {
+    error.textContent = "Password must be at least 6 characters.";
+    error.classList.remove("hidden");
+    return false;
+  }
+
+  return true;
+}
