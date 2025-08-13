@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strings"
 	"telcohub/db"
 	"telcohub/models"
 )
@@ -21,5 +22,15 @@ func FindOrCreateUserByEmail(email string, provider string) models.User {
 		Role:     "user",
 	}
 	db.DB.Create(&user)
+
+	emailaddress := strings.Split(email, "@")
+	group := models.Group{Name: emailaddress[0], OwnerID: user.ID}
+	db.DB.Create(&group)
+
+	db.DB.Create(&models.GroupUser{
+		UserID:  user.ID,
+		GroupID: group.ID,
+		IsAdmin: true,
+	})
 	return user
 }

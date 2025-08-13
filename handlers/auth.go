@@ -40,6 +40,15 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	group := models.Group{Name: user.Username, OwnerID: user.ID}
+	db.DB.Create(&group)
+
+	db.DB.Create(&models.GroupUser{
+		UserID:  user.ID,
+		GroupID: group.ID,
+		IsAdmin: true,
+	})
+
 	http.Redirect(w, r, "/login.html", http.StatusSeeOther)
 }
 
@@ -70,12 +79,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.StartUserSession(w, r, user, store)
-	//session, _ := store.Get(r, "session-id")
-	//session.Values["user_id"] = user.ID
-	//session.Values["role"] = user.Role
-	//session.Values["username"] = user.Username
-	//session.Save(r, w)
-
 	http.Redirect(w, r, "/gis", http.StatusSeeOther)
 }
 
